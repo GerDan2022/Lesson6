@@ -2,63 +2,109 @@ package ru.strannik.lesson6;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link NotesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class NotesFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.zip.Inflater;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class NotesFragment extends Fragment{
+    Button btn_Plus;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    public ArrayList<Note> notesList = new ArrayList(); //список ЗАМЕТОК
 
-    public NotesFragment() {
-        // Required empty public constructor
-    }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment NotesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static NotesFragment newInstance(String param1, String param2) {
-        NotesFragment fragment = new NotesFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
+    //при создании фрагмента укажем макет
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_notes, container, false);
+    }
+
+    //после создания макета экрана, создадим список ЗАМЕТОК
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        //сделаем проверку на null
+        if (getArguments() != null) {
+            int index = getArguments().getInt("ARG_INDEX");
+            String title = getArguments().getString("ARG_TITLE");
+            String date = getArguments().getString("ARG_DATE");
+            String desc = getArguments().getString("ARG_DESC");
+            Note note = new Note(title, date, desc);
+            notesList.set(index, note);
+        }
+        initNotes(view);
+        initButton(view);
+    }
+
+    //инициализация кнопки "+" и обработка события на нажатие
+    private void initButton(View view) {
+        btn_Plus = view.findViewById(R.id.btn_Plus);
+        btn_Plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //добавим новую ЗАМЕТКУ в массив ЗАМЕТОК
+                Note curNote = new Note();
+                notesList.add(curNote);
+                //отобразим фрагмент для новой заметки
+                showCurNote(notesList.size()-1, "", "", "");
+            }
+        });
+    }
+
+    //создание списка ЗАМЕТОК
+    private void initNotes(View view) {
+        Note firstNote = new Note("Первая заметка", "Трудно сказать что-то", "07.09.2022");
+        Note secondNote = new Note("Вторая заметка", "Трудно сказать что-то", "07.09.2022");
+        notesList.add(0,firstNote);
+        notesList.add(1,secondNote);
+        if (view instanceof LinearLayout) {
+            LinearLayout layoutView = (LinearLayout) view;
+
+            for (int i = 0; i < notesList.size(); i++) {
+                TextView tv = new TextView(getContext());
+                tv.setText(notesList.get(i).title);
+                tv.setTextSize(30);
+                layoutView.addView(tv);
+                final int position = i;
+                tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //вытащим данные по текущей ЗАМЕТКЕ
+                        String title = notesList.get(position).title;
+                        String date = notesList.get(position).dateOfCreate;
+                        String description = notesList.get(position).description;
+                        //отобразим текущую ЗАМЕТКУ
+                        showCurNote(position, title, date, description);
+                    }
+                });
+            }
+        }
+
+    }
+    //показ текущей ЗАМЕТКИ
+    private void showCurNote(int index, String title, String date, String description){
+        //определим текущую заметку
+        FragmentOfNote fragmentOfNote = FragmentOfNote.newInstance(index, title, date, description);
+        //подключим FragmentManager через requireActivity потому что у нас нет к нему доступа напрямую,
+        //мы работаем с фрагментом, который НЕ компонент АНДРОИД
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+        //переменная для транзакции
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        //добавляем фрагмент через ADD
+        fragmentTransaction.add(R.id.fragment_container, fragmentOfNote);
+        fragmentTransaction.commit();
+
     }
 }

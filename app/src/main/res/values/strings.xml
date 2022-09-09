@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">Note</string>
+    <string name="btn_Plus">+</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_text">Title</string>
+    <string name="description_of_note">Description of note</string>
+    <string name="date_text">Date Of Create</string>
+    <string name="btn_back">Back</string>
 </resources>
