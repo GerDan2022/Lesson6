@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_Plus"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="64dp"
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_lines"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:backgroundTint="@color/green"
-        android:text="@string/btn_Plus"
-        android:textAlignment="center"
-        android:textSize="35sp" />
+        app:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/item"/>
 
 
 </LinearLayout>

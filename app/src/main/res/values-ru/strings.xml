@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Заметки</string>
+    <string name="btn_Plus">+</string>
+    <string name="title_text">Заголовок</string>
+    <string name="description_of_note">Суть заметки</string>
+    <string name="date_text">Дата создания</string>
+    <string name="btn_save">Сохранить</string>
+    <string name="btn_remove">Удалить</string>
+    <string name="menu_clear_all">Очистить всё</string>
+    <string name="menu_theme">Тема</string>
+    <string name="menu_add_a_note">Добавить заметку</string>
+    <string name="popup_update_notes">Обновить заметки</string>
+    <string name="popup_remove_note">Удалить заметку</string>
+    <string name="menu_action_delete">Удалить заметку</string>
+    <string name="menu_action_save">Сохранить заметку</string>
+    <string name="menu_action_back">Вернуться</string>
+</resources>
